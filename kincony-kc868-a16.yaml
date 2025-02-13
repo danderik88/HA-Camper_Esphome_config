@@ -1,0 +1,353 @@
+esphome:
+  name: kincony-kc868-a16
+  friendly_name: KinCony KC868-A16
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "au4w3rlZzLOyCG3MYbyetpAqLneX7FpHULdr3RoyESk="
+
+ota:
+  platform: esphome
+  password: "ac34002463b6fa477e9f4aac9ec583fb"
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+
+# wifi:
+#   ssid: !secret wifi_ssid
+#   password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+#   ap:
+#     ssid: "Kincony-Kc868-A16"
+#     password: "u1g8YGjsAHiB"
+
+# Example configuration entry
+web_server:
+  port: 80
+
+# captive_portal:
+
+i2c:
+  sda: 4  # Pin SDA
+  scl: 5  # Pin SCL
+  scan: true  # Verifica dei dispositivi I2C collegati
+  id: bus_a
+
+# Configurazione dei chip PCF8574
+pcf8574:
+  - id: 'inputs_1_8'  # Ingressi 1-8
+    address: 0x22
+  - id: 'inputs_9_16'  # Ingressi 9-16
+    address: 0x21
+  - id: 'outputs_1_8'  # Uscite 1-8
+    address: 0x24
+  - id: 'outputs_9_16'  # Uscite 9-16
+    address: 0x25
+
+# Configurazione delle uscite GPIO per i relè
+switch:
+  - platform: gpio
+    name: "Luce 1"
+    id: luce_1
+    pin:
+      pcf8574: outputs_1_8
+      number: 0
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 2"
+    id: luce_2
+    pin:
+      pcf8574: outputs_1_8
+      number: 1
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 3"
+    id: luce_3
+    pin:
+      pcf8574: outputs_1_8
+      number: 2
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 4"
+    id: luce_4
+    pin:
+      pcf8574: outputs_1_8
+      number: 3
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 5"
+    id: luce_5
+    pin:
+      pcf8574: outputs_1_8
+      number: 4
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 6"
+    id: luce_6
+    pin:
+      pcf8574: outputs_1_8
+      number: 5
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 7"
+    id: luce_7
+    pin:
+      pcf8574: outputs_1_8
+      number: 6
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 8"
+    id: luce_8
+    pin:
+      pcf8574: outputs_1_8
+      number: 7
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 9"
+    id: luce_9
+    pin:
+      pcf8574: outputs_9_16
+      number: 0
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 10"
+    id: luce_10
+    pin:
+      pcf8574: outputs_9_16
+      number: 1
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 11"
+    id: luce_11
+    pin:
+      pcf8574: outputs_9_16
+      number: 2
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 12"
+    id: luce_12
+    pin:
+      pcf8574: outputs_9_16
+      number: 3
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 13"
+    id: luce_13
+    pin:
+      pcf8574: outputs_9_16
+      number: 4
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 14"
+    id: luce_14
+    pin:
+      pcf8574: outputs_9_16
+      number: 5
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 15"
+    id: luce_15
+    pin:
+      pcf8574: outputs_9_16
+      number: 6
+      mode: OUTPUT
+      inverted: true
+  - platform: gpio
+    name: "Luce 16"
+    id: luce_16
+    pin:
+      pcf8574: outputs_9_16
+      number: 7
+      mode: OUTPUT
+      inverted: true
+
+# Configurazione ingressi per interruttori unipolari
+binary_sensor:
+  - platform: gpio
+    name: "Interruttore 1"
+    pin:
+      pcf8574: inputs_1_8
+      number: 0
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_1
+  - platform: gpio
+    name: "Interruttore 2"
+    pin:
+      pcf8574: inputs_1_8
+      number: 1
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_2
+  - platform: gpio
+    name: "Interruttore 3"
+    pin:
+      pcf8574: inputs_1_8
+      number: 2
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_3
+  - platform: gpio
+    name: "Interruttore 4"
+    pin:
+      pcf8574: inputs_1_8
+      number: 3
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_4
+  - platform: gpio
+    name: "Interruttore 5"
+    pin:
+      pcf8574: inputs_1_8
+      number: 4
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_5
+  - platform: gpio
+    name: "Interruttore 6"
+    pin:
+      pcf8574: inputs_1_8
+      number: 5
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_6
+  - platform: gpio
+    name: "Interruttore 7"
+    pin:
+      pcf8574: inputs_1_8
+      number: 6
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_7
+  - platform: gpio
+    name: "Interruttore 8"
+    pin:
+      pcf8574: inputs_1_8
+      number: 7
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_8
+  - platform: gpio
+    name: "Interruttore 9"
+    pin:
+      pcf8574: inputs_9_16
+      number: 0
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_9
+  - platform: gpio
+    name: "Interruttore 10"
+    pin:
+      pcf8574: inputs_9_16
+      number: 1
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_10
+  - platform: gpio
+    name: "Interruttore 11"
+    pin:
+      pcf8574: inputs_9_16
+      number: 2
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_11
+  - platform: gpio
+    name: "Interruttore 12"
+    pin:
+      pcf8574: inputs_9_16
+      number: 3
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_12
+  - platform: gpio
+    name: "Interruttore 13"
+    pin:
+      pcf8574: inputs_9_16
+      number: 4
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_13
+  - platform: gpio
+    name: "Interruttore 14"
+    pin:
+      pcf8574: inputs_9_16
+      number: 5
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_14
+  - platform: gpio
+    name: "Interruttore 15"
+    pin:
+      pcf8574: inputs_9_16
+      number: 6
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_15
+  - platform: gpio
+    name: "Interruttore 16"
+    pin:
+      pcf8574: inputs_9_16
+      number: 7
+      mode: INPUT
+      inverted: true
+    on_state:
+      then:
+        - switch.toggle: luce_16

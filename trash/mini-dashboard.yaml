@@ -1,0 +1,136 @@
+esphome:
+  name: mini_dashboard
+  friendly_name: Mini Dashboard
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Logging e diagnostica
+logger:
+
+# Integrazione con Home Assistant
+api:
+  encryption:
+    key: "2RHlup2xtUSgGy084XxqC3l1cn8pPh9B8BEHRqZ+Low="
+
+# Aggiornamento OTA
+ota:
+  - platform: esphome
+    password: "f6032941a6b3a4249686942b259a36bd"
+
+# Configurazione WiFi
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "Mini-Dashboard Fallback Hotspot"
+    password: "igLAmJj2j2oU"
+
+captive_portal:
+
+# Configurazione del display e font
+spi:
+  - id: lcd
+    clk_pin: GPIO14
+    mosi_pin: GPIO13
+    miso_pin: GPIO12
+
+display:
+  - platform: ili9xxx
+    model: ILI9341
+    id: my_display
+    spi_id: lcd
+    cs_pin: GPIO15
+    dc_pin: GPIO2
+    reset_pin: GPIO16
+    rotation: 90
+    invert_colors: false
+    update_interval: 1s
+    lambda: |-
+      // Sfondo nero
+      it.fill(Color::BLACK);
+
+      // Testo di benvenuto
+      it.printf(120, 50, id(font_big), Color::WHITE, TextAlign::CENTER, "Mini Dashboard");
+
+      // Data e ora
+      it.strftime(120, 100, id(font_medium), Color::WHITE, TextAlign::CENTER, "%H:%M:%S", id(homeassistant_time).now());
+      it.strftime(120, 130, id(font_small), Color::WHITE, TextAlign::CENTER, "%d-%m-%Y", id(homeassistant_time).now());
+
+      // Pulsanti
+      it.printf(60, 200, id(font_icon), id(button1).state ? Color::ACTIVE : Color::INACTIVE, TextAlign::CENTER, "\U000F11E1");
+      it.printf(180, 200, id(font_icon), id(button2).state ? Color::ACTIVE : Color::INACTIVE, TextAlign::CENTER, "\U000F11E1");
+
+font:
+  - file: "gfonts://Roboto@500"
+    id: font_big
+    size: 40
+  - file: "gfonts://Roboto@300"
+    id: font_medium
+    size: 20
+  - file: "gfonts://Roboto@300"
+    id: font_small
+    size: 16
+  - file: "fonts/materialdesignicons-webfont.ttf"
+    id: font_icon
+    size: 30
+
+# Colori personalizzati
+color:
+  - id: ACTIVE
+    hex: "FEC600"
+  - id: INACTIVE
+    hex: "808080"
+
+# Configurazione touchscreen
+touchscreen:
+  platform: xpt2046
+  spi_id: lcd
+  cs_pin: GPIO33
+  interrupt_pin: GPIO36
+  update_interval: 50ms
+  threshold: 400
+  calibration:
+    x_min: 280
+    x_max: 3860
+    y_min: 340
+    y_max: 3860
+  transform:
+    mirror_x: true
+    mirror_y: false
+
+# Sensori e pulsanti
+binary_sensor:
+  - platform: touchscreen
+    name: "Button 1"
+    id: button1
+    x_min: 20
+    x_max: 100
+    y_min: 180
+    y_max: 220
+  - platform: touchscreen
+    name: "Button 2"
+    id: button2
+    x_min: 140
+    x_max: 220
+    y_min: 180
+    y_max: 220
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+# Retroilluminazione e LED
+output:
+  - platform: ledc
+    pin: GPIO21
+    id: backlight_pwm
+
+light:
+  - platform: monochromatic
+    output: backlight_pwm
+    name: "Display Backlight"
+    id: backlight
+    restore_mode: ALWAYS_ON

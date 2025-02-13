@@ -1,0 +1,32 @@
+esphome:
+  name: esp32-camera-da-letto
+  friendly_name: Esp32 Camera da Letto
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "s+SJDfoseRtcRKQGKaknj4PzgnmfpcVvOVe+julfL+8="
+
+ota:
+  - platform: esphome
+    password: "eb1d979f2e4094132732f6ca1eb755dd"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32-Camera-Da-Letto"
+    password: "5iMZzm1yzYh2"
+
+captive_portal:
+    

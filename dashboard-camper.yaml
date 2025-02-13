@@ -1,0 +1,32 @@
+esphome:
+  name: dashboard-camper
+  friendly_name: Dashboard Camper
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "YAatXvVPXuctc0kx6PgEkhiDlZnOTtYrZ/LjJj1HAMY="
+
+ota:
+  - platform: esphome
+    password: "8d4f19a4f9f7a17620621d7204d686bf"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Dashboard-Camper"
+    password: "ui0gT9qwgBqW"
+
+captive_portal:
+    

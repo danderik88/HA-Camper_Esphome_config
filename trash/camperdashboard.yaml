@@ -1,0 +1,84 @@
+esphome:
+  name: dashboard
+  platform: ESP32
+  board: esp32dev
+
+# Configurazione Wi-Fi
+wifi:
+  ssid: "YOUR_SSID"
+  password: "YOUR_PASSWORD"
+
+# Configurazione API
+api:
+
+# Configurazione MQTT (opzionale se preferisci usare MQTT)
+mqtt:
+  broker: "YOUR_MQTT_BROKER"
+  username: "YOUR_MQTT_USER"
+  password: "YOUR_MQTT_PASSWORD"
+
+# Configurazione OTA (per aggiornamenti over-the-air)
+ota:
+
+# Configurazione Logger
+logger:
+
+# Definizione del touchscreen
+xpt2046:
+  id: touchscreen
+  cs_pin: GPIO5
+  irq_pin: GPIO16
+  update_interval: 50ms
+  dimension_x: 320
+  dimension_y: 240
+
+# Font
+font:
+  - file: "fonts/Arial.ttf"
+    id: my_font
+    size: 20
+
+# Definizione del display
+display:
+  - platform: ili9341
+    model: TFT 2.4
+    cs_pin: GPIO4
+    dc_pin: GPIO22
+    led_pin: GPIO23
+    reset_pin: GPIO2
+    rotation: 0
+    lambda: |-
+      it.fill(COLOR_BLACK);
+      it.print(0, 0, id(my_font), "Dashboard");
+      it.print(0, 20, id(my_font), "Temp Sensor 1: " + id(temperature_sensor_1).state + "°C");
+      it.print(0, 40, id(my_font), "Temp Sensor 2: " + id(temperature_sensor_2).state + "°C");
+
+# Definizione dei bottoni
+binary_sensor:
+  - platform: gpio
+    pin: GPIO12
+    name: "Button 1"
+    on_press:
+      then:
+        - homeassistant.service:
+            service: light.toggle
+            data:
+              entity_id: light.luce1
+
+  # Ripeti per i restanti bottoni (Button 2 a Button 10)
+
+# Sensori di temperatura
+sensor:
+  - platform: dht
+    pin: GPIO13
+    temperature:
+      name: "Temperature Sensor 1"
+      id: temperature_sensor_1
+    update_interval: 60s
+
+  - platform: dht
+    pin: GPIO14
+    temperature:
+      name: "Temperature Sensor 2"
+      id: temperature_sensor_2
+    update_interval: 60s

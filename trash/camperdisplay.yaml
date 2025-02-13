@@ -1,0 +1,54 @@
+esphome:
+  name: camperdisplay
+  friendly_name: CamperDisplay
+  platformio_options:
+    lib_deps: 
+      - lvgl/lvgl
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "kww216iVqZqon3Iyq1mC8sO17qXOk4eB0QKPHS0iq90="
+
+# OTA (Over-The-Air) configuration
+ota:
+  - platform: esphome
+    password: "63bbbcceb4ee9f51f22133e05973b2e2"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Camperdisplay Fallback Hotspot"
+    password: "KdVeFDkIDks8"
+
+captive_portal:
+
+# Configurazione del display LVGL
+custom_component:
+  - id: lvgl_display
+    lambda: |-
+      auto label = lv_label_create(lv_scr_act());
+      lv_label_set_text(label, "Caricamento Home Assistant...");
+      lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+      
+      auto webview = lv_webview_create(lv_scr_act());
+      lv_webview_set_src(webview, "http://homeassistant:8123/dashboard-camper/0");
+      lv_obj_set_size(webview, LV_HOR_RES, LV_VER_RES);
+
+# Configurazione del touchscreen
+touchscreen:
+  - platform: xpt2046
+    cs_pin: 5
+    irq_pin: 4
+    update_interval: 10ms

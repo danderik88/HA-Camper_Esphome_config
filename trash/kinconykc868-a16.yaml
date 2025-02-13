@@ -1,0 +1,32 @@
+esphome:
+  name: kinconykc868-a16
+  friendly_name: KinConyKC868-A16
+
+esp32:
+  board: esp32-s2-saola-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "jgiSk7kHPI0kZvH2iYQvw/bjMWLFfzkA4E17Ni/Epwk="
+
+ota:
+  - platform: esphome
+    password: "5a5ae33b9999dd1c760793fe5215c2d3"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Kinconykc868-A16"
+    password: "MMmd1Sq35oUd"
+
+captive_portal:
+    

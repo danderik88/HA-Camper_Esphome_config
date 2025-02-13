@@ -1,0 +1,66 @@
+esphome:
+  name: esp32-camera-da-letto
+  friendly_name: Esp32 Camera da Letto
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "DCPxhTMmsu9X4PjDQvofijbsvrmGWJJoKQEMs0jxhBM="
+
+ota:
+  - platform: esphome
+    password: "0c4723383e055cd26bc8dad62fcba71e"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32-Camera-Da-Letto"
+    password: "qCnRYTksTVfj"
+
+captive_portal:
+
+# Configurazione dei relè
+switch:
+  - platform: gpio
+    pin: GPIO23
+    name: "Relè Letto 1"
+    id: releletto1
+
+  - platform: gpio
+    pin: GPIO22
+    name: "Relè Letto 2"
+    id: releletto2
+
+# Configurazione degli interruttori
+binary_sensor:
+  - platform: gpio
+    pin: GPIO34
+    name: "Faretto Letto 1"
+    filters:
+      - invert:  # Inverte il segnale se si usa un interruttore che chiude a massa
+    on_press:
+      - switch.toggle: releletto1
+
+  - platform: gpio
+    pin: GPIO35
+    name: "Faretto Letto 2"
+    filters:
+      - invert:
+    on_press:
+      - switch.toggle: releletto2
+
+  - platform: gpio
+    pin: GPIO18
+    name: "Sensore di presenza"
+    device_class: occupancy
