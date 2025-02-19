@@ -82,7 +82,7 @@ binary_sensor:
       mode: INPUT_PULLUP
       inverted: true
     name: "Interruttore 1"
-    on_press:
+    on_state:
       - switch.toggle: relay_1
 
   - platform: gpio
@@ -91,7 +91,7 @@ binary_sensor:
       mode: INPUT_PULLUP
       inverted: true
     name: "Interruttore 2"
-    on_press:
+    on_state:
       - switch.toggle: relay_2
 
 switch:
